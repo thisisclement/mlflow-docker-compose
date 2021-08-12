@@ -28,7 +28,7 @@ services:
       - postgresql
       - waitfordb
     volumes:
-      - ${ARTIFACT_PATH}:${ARTIFACT_PATH}
+      - data-volume:${ARTIFACT_PATH}
     environment:
       DB_URI: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgresql:5432/mlflow-db
       VIRTUAL_HOST: ${HOST}
@@ -39,3 +39,6 @@ services:
     # stdin_open: true
     # tty: true
     # command: /bin/bash
+
+volumes:
+  data-volume:
