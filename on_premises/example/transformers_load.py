@@ -2,6 +2,7 @@ from transformers import AutoTokenizer, AutoModel
 import torch
 import mlflow
 import os
+from experiment_recorder import *
 
 #Mean Pooling - Take attention mask into account for correct averaging
 def mean_pooling(model_output, attention_mask):
@@ -32,14 +33,11 @@ sentence_embeddings_np = [i.detach().cpu().numpy() for i in sentence_embeddings]
 print("Sentence embeddings:")
 print(sentence_embeddings_np[0])
 
-os.environ['MLFLOW_TRACKING_URI']      = "http://0.0.0.0:5000"
-os.environ['MLFLOW_TRACKING_USERNAME'] = "mlflow_user"
-os.environ['MLFLOW_TRACKING_PASSWORD'] = "mlflow_pass"
-mlflow.set_experiment("sentbert")
-
-with mlflow.start_run() as run:
-    mlflow.pytorch.log_model(model, "model")
-
+### 1. This set environment variables, starts a run and gets logger.
+recorder = ExperimentRecorder('sentbert',
+    run_name=f'test run')
+mlflow.pytorch.log_model(model, "model")
+recorder.end_run()
 
 from sentence_transformers import SentenceTransformer
 
